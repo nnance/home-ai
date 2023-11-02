@@ -1,11 +1,15 @@
-import { Categories } from "hap-nodejs";
-import switchAccessory from "./switch";
+import accessory from "./bridge";
 
-switchAccessory.publish({
+const port = 47123;
+const pinCode = "0314-5154";
+
+accessory.publish({
   username: "1A:2B:3C:4D:5E:FF",
-  pincode: "031-45-154",
-  port: 47123,
-  category: Categories.SWITCH,
+  pincode: pinCode,
+  port,
+  category: accessory.category,
 });
 
-console.log("Accessory published and reachable on port 47123.");
+console.log(
+  `Accessory published and reachable on port ${port} with pin code ${pinCode}.`
+);
