@@ -1,5 +1,5 @@
 import { HomebridgeAPI } from "homebridge/lib/api";
-import plugin from "homebridge-accessory-example";
+import plugin from "./example-accessory";
 import { pluginManager } from "./pluginManager";
 import { Logger } from "homebridge/lib/logger";
 import { Access, AccessoryConfig } from "homebridge";

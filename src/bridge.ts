@@ -2,7 +2,7 @@ import { Bridge, uuid } from "hap-nodejs";
 import { HomebridgeAPI } from "homebridge/lib/api";
 import { pluginManager } from "./homebridge/pluginManager";
 import { createAccessory } from "./accessory";
-import plugin from "homebridge-accessory-example";
+import plugin from "./homebridge/example-accessory";
 
 // Create a new Bridge object
 const bridgeUUID = uuid.generate("hap-nodejs:accessories:bridge");

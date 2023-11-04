@@ -20,10 +20,10 @@ export function createAccessory(
   const switchAccessory = new Accessory(name, switchUUID);
 
   accessory.getServices().forEach((service, index) => {
-    //TODO: This is a hack to get the switch service to show up
-    if (index === 1) {
-      switchAccessory.addService(service);
+    if (!service.subtype) {
+      service.subtype = index.toString();
     }
+    switchAccessory.addService(service);
   });
 
   return switchAccessory;
