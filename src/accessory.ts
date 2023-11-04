@@ -1,14 +1,17 @@
 import { Accessory, uuid } from "hap-nodejs";
-import { AccessoryConfig, AccessoryPluginConstructor } from "homebridge";
+import {
+  AccessoryConfig,
+  AccessoryPluginConstructor,
+  Logging,
+} from "homebridge";
 import { HomebridgeAPI } from "homebridge/lib/api";
-import { Logger } from "homebridge/lib/logger";
 
 export function createAccessory(
   name: string,
   plugin: AccessoryPluginConstructor,
-  api: HomebridgeAPI
+  api: HomebridgeAPI,
+  logger: Logging
 ) {
-  const logger = Logger.withPrefix(name);
   const config: AccessoryConfig = {
     accessory: "ExampleSwitch",
     name,

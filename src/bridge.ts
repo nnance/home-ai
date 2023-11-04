@@ -1,26 +1,65 @@
 import { Bridge, uuid } from "hap-nodejs";
-import { HomebridgeAPI } from "homebridge/lib/api";
-import { pluginManager } from "./homebridge/pluginManager";
+import {
+  AccessoryName,
+  AccessoryPluginConstructor,
+  HomebridgeAPI,
+  InternalAPIEvent,
+} from "homebridge/lib/api";
 import { createAccessory } from "./accessory";
-import plugin from "./homebridge/example-accessory";
+import { Logger } from "homebridge/lib/logger";
 
-// Create a new Bridge object
-const bridgeUUID = uuid.generate("hap-nodejs:accessories:bridge");
-const bridge = new Bridge("Home AI Bridge", bridgeUUID);
+const BRIDGE_NAME = "Home AI Bridge";
 
-const api = new HomebridgeAPI();
-const manager = pluginManager(api);
-plugin(api);
+export function createBridge(
+  logger = Logger.withPrefix(BRIDGE_NAME),
+  api = new HomebridgeAPI()
+) {
+  const bridgeUUID = uuid.generate("hap-nodejs:accessories:bridge");
+  const bridge = new Bridge(BRIDGE_NAME, bridgeUUID);
 
-const registeredPlugin = manager.getPlugins().get("ExampleSwitch");
+  const plugins: Map<AccessoryName, AccessoryPluginConstructor> = new Map();
 
-if (!registeredPlugin) {
-  throw new Error("Could not find accessory");
+  api.on(InternalAPIEvent.REGISTER_ACCESSORY, (accessoryName, constructor) => {
+    plugins.set(accessoryName, constructor);
+  });
+
+  function addToBridge(
+    accessoryName: AccessoryName,
+    constructor: AccessoryPluginConstructor
+  ) {
+    const service = createAccessory(accessoryName, constructor, api, logger);
+
+    bridge.addBridgedAccessory(service);
+  }
+
+  return {
+    addPluginByName: (pluginName: string) => {
+      const registeredPlugin = plugins.get(pluginName);
+
+      if (!registeredPlugin) {
+        throw new Error("Could not find accessory");
+      }
+
+      addToBridge(pluginName, registeredPlugin);
+    },
+
+    addPlugin(plugin: (api: HomebridgeAPI) => void) {
+      api.on(InternalAPIEvent.REGISTER_ACCESSORY, addToBridge);
+      plugin(api);
+    },
+
+    getPlugins: () => plugins,
+
+    publish: ({ pinCode, port }: { pinCode: string; port: number }) => {
+      bridge.publish(
+        {
+          username: "1A:2B:3C:4D:5E:FF",
+          pincode: pinCode,
+          port,
+          category: bridge.category,
+        },
+        false
+      );
+    },
+  };
 }
-
-const service = createAccessory("ExampleSwitch", registeredPlugin, api);
-
-// Add the switch accessory to the bridge
-bridge.addBridgedAccessory(service);
-
-export default bridge;

@@ -2,8 +2,7 @@ import { HomebridgeAPI } from "homebridge/lib/api";
 import plugin from "./example-accessory";
 import { pluginManager } from "./pluginManager";
 import { Logger } from "homebridge/lib/logger";
-import { Access, AccessoryConfig } from "homebridge";
-import exp from "constants";
+import { AccessoryConfig } from "homebridge";
 
 describe("PluginManager", () => {
   it("should register the plugin", () => {
