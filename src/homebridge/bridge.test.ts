@@ -1,6 +1,6 @@
 import { createBridge } from "./bridge";
 import { HomebridgeAPI } from "homebridge/lib/api";
-import exampleAccessory = require("./homebridge/example-accessory");
+import exampleAccessory = require("./example-accessory");
 import { Logger } from "homebridge/lib/logger";
 
 describe("createBridge", () => {
@@ -32,6 +32,23 @@ describe("createBridge", () => {
       const bridge = createBridge(logger);
       bridge.addPlugin(exampleAccessory);
       expect(bridge.getPlugins().size).toBe(1);
+    });
+
+    it("registered plugin should have constructor called", () => {
+      const bridge = createBridge(logger);
+      const accessory = jest.fn();
+      bridge.addPlugin(accessory);
+      expect(accessory).toHaveBeenCalled();
+    });
+  });
+
+  describe.skip("publish", () => {
+    it("should publish the bridge", () => {
+      const bridge = createBridge(logger);
+      bridge.publish({ pinCode: "123-45-678", port: 47123 });
+      expect(logger.log).toHaveBeenCalledWith(
+        "Bridge published and reachable on port 47123 with pin code 123-45-678."
+      );
     });
   });
 });

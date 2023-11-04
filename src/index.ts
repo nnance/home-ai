@@ -1,4 +1,4 @@
-import { createBridge } from "./bridge";
+import { createBridge } from "./homebridge/bridge";
 import exampleAccessory from "./homebridge/example-accessory";
 
 const port = 47123;
