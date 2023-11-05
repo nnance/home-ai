@@ -4,6 +4,7 @@
   "description": "Your personal assistant for your home",
   "main": "src/index.ts",
   "scripts": {
+    "start": "ts-node src/index.ts",
     "test": "jest"
   },
   "keywords": [

@@ -19,18 +19,17 @@ export function createBridge(
 
   const plugins: Map<AccessoryName, AccessoryPluginConstructor> = new Map();
 
-  api.on(InternalAPIEvent.REGISTER_ACCESSORY, (accessoryName, constructor) => {
-    plugins.set(accessoryName, constructor);
-  });
-
   function addToBridge(
     accessoryName: AccessoryName,
     constructor: AccessoryPluginConstructor
   ) {
     const service = createAccessory(accessoryName, constructor, api, logger);
-
     bridge.addBridgedAccessory(service);
   }
+
+  api.on(InternalAPIEvent.REGISTER_ACCESSORY, (accessoryName, constructor) => {
+    plugins.set(accessoryName, constructor);
+  });
 
   return {
     addPluginByName: (pluginName: string) => {
@@ -44,8 +43,8 @@ export function createBridge(
     },
 
     addPlugin(plugin: (api: HomebridgeAPI) => void) {
-      api.on(InternalAPIEvent.REGISTER_ACCESSORY, addToBridge);
       plugin(api);
+      api.
     },
 
     getPlugins: () => plugins,
